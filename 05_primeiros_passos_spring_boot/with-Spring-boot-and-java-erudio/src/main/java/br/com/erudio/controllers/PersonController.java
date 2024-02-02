@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.erudio.model.Person;
+import br.com.erudio.data.vo.v1.PersonVO;
 import br.com.erudio.services.PersonService;
 
 @RestController
@@ -27,24 +27,24 @@ public class PersonController {
 
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Person> getPerson(@PathVariable(value = "id") Long id) {
-		return new ResponseEntity<Person>(this.personService.findById(id), HttpStatus.OK);
+	public ResponseEntity<PersonVO> getPerson(@PathVariable(value = "id") Long id) {
+		return new ResponseEntity<PersonVO>(this.personService.findById(id), HttpStatus.OK);
 	}
 	
 	
 	@GetMapping
-	public ResponseEntity<List<Person>> getPersons() {
-		return new ResponseEntity<List<Person>>(this.personService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<PersonVO>> getPersons() {
+		return new ResponseEntity<List<PersonVO>>(this.personService.findAll(), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Person> save(@RequestBody Person person) {
-		return new ResponseEntity<Person>(this.personService.create(person), HttpStatus.CREATED);
+	public ResponseEntity<PersonVO> save(@RequestBody PersonVO personVO) {
+		return new ResponseEntity<PersonVO>(this.personService.create(personVO), HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Person> update(@PathVariable(value = "id") Long id,@RequestBody Person person) {
-		return new ResponseEntity<Person>(this.personService.update(id,person), HttpStatus.OK);
+	public ResponseEntity<PersonVO> update(@PathVariable(value = "id") Long id,@RequestBody PersonVO personVO) {
+		return new ResponseEntity<PersonVO>(this.personService.update(id,personVO), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

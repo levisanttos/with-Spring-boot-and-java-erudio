@@ -1,64 +1,70 @@
 package br.com.erudio.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.model.Person;
+import br.com.erudio.repositories.PersonRepository;
 import br.com.erudio.services.PersonService;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 	
-	private final AtomicLong counter = new AtomicLong();
+	@Autowired
+	private PersonRepository personRepository;
 	
 	private Logger logger = Logger.getLogger(PersonServiceImpl.class.getName());
 
 	
 	@Override
-	public Person findById(String id) {
+	public Person findById(Long id) {
 		
 		logger.info("Find one Person");
 		
-		Person person = new Person(counter.incrementAndGet(), "Levi", "Santos", "Taboão da Serra - SP - Brasil", "MASCULINO");
-		
-		return person;
+		return this.personRepository.findById(id).map(person ->{
+			
+			return person;
+		}).orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada.."));
 	}
 	
 	@Override
 	public List<Person> findAll() {
-		
-		logger.info("Retornando uma lista de persons");
-		
-		List<Person> persons = new ArrayList<>();
-		persons.add(new Person(counter.incrementAndGet(), "Levi", "Santos", "Taboão da Serra", "MASCULINO"));
-		persons.add(new Person(counter.incrementAndGet(), "Artur", "Santos", "Madrid - Spain", "MASCULINO"));
-		persons.add(new Person(counter.incrementAndGet(), "Vitor", "Santos", "Manchester - Inglaterra", "MASCULINO"));
-		persons.add(new Person(counter.incrementAndGet(), "Italo", "Santos", "Munique - Germany", "MASCULINO"));
-		persons.add(new Person(counter.incrementAndGet(), "Wanessa", "Ribeiro", "Africa do Sul", "Feminino"));
-		persons.add(new Person(counter.incrementAndGet(), "Perola", "Santos", "Milão - Italia", "Feminino"));
-		return persons;
+		return this.personRepository.findAll();
 	}
 	
 	@Override
 	public Person create(Person person) {
 		
 		logger.info("Criando um person");
+		person = this.personRepository.save(person);
+		logger.info("Pessoa criada com sucesso.");
 		return person;
 	}
 	
 	@Override
-	public Person update(Person person) {
+	public Person update(Long id, Person person) {
 		logger.info("Atualizando o person");
+		
+		var entity = this.personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada"));
+		entity.setFirstName(person.getFirstName());
+		entity.setLastName(person.getLastName());
+		entity.setAddress(person.getAddress());
+		entity.setGender(person.getGender());
+		person = this.personRepository.saveAndFlush(entity);
+		logger.info("Pessoa atualizada com sucesso.");
 		return person;
 	}
 	
 	@Override
-	public void delete(String id) {
+	public void delete(Long id) {
 		logger.info("Removendo um person");
+		var entity = this.personRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Pessoa não encontrada"));
+		this.personRepository.delete(entity);
+		logger.info("Pessoa removida com sucesso");
 		
 	}
 }

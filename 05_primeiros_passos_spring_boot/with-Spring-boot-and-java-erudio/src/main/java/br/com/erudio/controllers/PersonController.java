@@ -27,7 +27,7 @@ public class PersonController {
 
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Person> getPerson(@PathVariable(value = "id") String id) {
+	public ResponseEntity<Person> getPerson(@PathVariable(value = "id") Long id) {
 		return new ResponseEntity<Person>(this.personService.findById(id), HttpStatus.OK);
 	}
 	
@@ -43,12 +43,12 @@ public class PersonController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Person> update(@PathVariable(value = "id") String id,@RequestBody Person person) {
-		return new ResponseEntity<Person>(this.personService.update(person), HttpStatus.OK);
+	public ResponseEntity<Person> update(@PathVariable(value = "id") Long id,@RequestBody Person person) {
+		return new ResponseEntity<Person>(this.personService.update(id,person), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable(value = "id") String id) {
+	public ResponseEntity<Void> delete(@PathVariable(value = "id") Long id) {
 		this.personService.delete(id);
 		return ResponseEntity.noContent().build();
 	}

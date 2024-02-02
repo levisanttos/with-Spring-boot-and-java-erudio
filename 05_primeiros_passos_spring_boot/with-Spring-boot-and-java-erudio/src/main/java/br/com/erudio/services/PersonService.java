@@ -7,14 +7,14 @@ import br.com.erudio.model.Person;
 public interface PersonService {
 
 	
-	Person findById(String id);
+	Person findById(Long id);
 	
 	List<Person> findAll();
 	
 	Person create(Person person);
 	
-	Person update(Person person);
+	Person update(Long id, Person person);
 	
-	void delete(String id);
+	void delete(Long id);
 	
 }

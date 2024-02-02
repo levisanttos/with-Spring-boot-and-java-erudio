@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.erudio.data.vo.v1.PersonVO;
+import br.com.erudio.data.vo.v2.PersonVOV2;
 import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.mapper.ModelMapperUtil;
 import br.com.erudio.model.Person;
@@ -75,5 +76,13 @@ public class PersonServiceImpl implements PersonService {
 		this.personRepository.delete(entity);
 		logger.info("Pessoa removida com sucesso");
 		
+	}
+	
+	@Override
+	public PersonVOV2 createV2(PersonVOV2 personVOV2) {
+		var entity = ModelMapperUtil.parseObject(personVOV2, Person.class);
+		entity = this.personRepository.save(entity);
+		personVOV2.setId(entity.getId());
+		return personVOV2;
 	}
 }

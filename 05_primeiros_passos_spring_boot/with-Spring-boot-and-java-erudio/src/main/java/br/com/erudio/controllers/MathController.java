@@ -1,4 +1,4 @@
-package br.com.erudio;
+package br.com.erudio.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

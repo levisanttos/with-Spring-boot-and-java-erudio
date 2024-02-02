@@ -1,52 +1,36 @@
-package br.com.erudio.model;
+package br.com.erudio.data.vo.v2;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import br.com.erudio.model.Gender;
 
-@Entity
-@Table(name = "TB_PERSON")
-public class Person implements Serializable {
+public class PersonVOV2 implements Serializable {
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cd_person" )
 	private Long id;
 	
-	@Column(name = "firt_name")
 	private String firstName;
 	
-	@Column(name = "last_name")
 	private String lastName;
 	
-	@Column(name  = "address")
 	private String address;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "gender")
 	private Gender gender;
 	
-	@Column(name = "birthDay")
 	private LocalDate birthDay;
 	
-	public Person() {
+	public PersonVOV2() {
 		
 	}
+	
 
-	public Person( String firstName, String lastName, String address, Gender gender, LocalDate birthDay) {
+	public PersonVOV2(Long id, String firstName, String lastName, String address, Gender gender, LocalDate birthDay) {
+		super();
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
@@ -102,4 +86,33 @@ public class Person implements Serializable {
 		this.birthDay = birthDay;
 	}
 
+
+	@Override
+	public String toString() {
+		return "PersonVOV2 [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", address=" + address
+				+ ", gender=" + gender + ", birthDay=" + birthDay + "]";
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, birthDay, firstName, gender, id, lastName);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PersonVOV2 other = (PersonVOV2) obj;
+		return Objects.equals(address, other.address) && Objects.equals(birthDay, other.birthDay)
+				&& Objects.equals(firstName, other.firstName) && gender == other.gender && Objects.equals(id, other.id)
+				&& Objects.equals(lastName, other.lastName);
+	}
+
+	
 }

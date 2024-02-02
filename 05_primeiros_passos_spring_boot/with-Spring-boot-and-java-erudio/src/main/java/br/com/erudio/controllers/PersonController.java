@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.data.vo.v1.PersonVO;
+import br.com.erudio.data.vo.v2.PersonVOV2;
 import br.com.erudio.services.PersonService;
 
 @RestController
@@ -40,6 +41,11 @@ public class PersonController {
 	@PostMapping
 	public ResponseEntity<PersonVO> save(@RequestBody PersonVO personVO) {
 		return new ResponseEntity<PersonVO>(this.personService.create(personVO), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/v2")
+	public ResponseEntity<PersonVOV2> saveV2(@RequestBody PersonVOV2 personVOV2) {
+		return new ResponseEntity<PersonVOV2>(this.personService.createV2(personVOV2), HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")

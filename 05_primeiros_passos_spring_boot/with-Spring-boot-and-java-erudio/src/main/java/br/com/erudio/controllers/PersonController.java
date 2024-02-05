@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,28 +28,36 @@ public class PersonController {
 	private PersonService personService;
 
 	
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = 
+			{MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<PersonVO> getPerson(@PathVariable(value = "id") Long id) {
 		return new ResponseEntity<PersonVO>(this.personService.findById(id), HttpStatus.OK);
 	}
 	
 	
-	@GetMapping
+	@GetMapping(produces = 
+			{MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<List<PersonVO>> getPersons() {
 		return new ResponseEntity<List<PersonVO>>(this.personService.findAll(), HttpStatus.OK);
 	}
 	
-	@PostMapping
+	@PostMapping(produces = 
+			{MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, 
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<PersonVO> save(@RequestBody PersonVO personVO) {
 		return new ResponseEntity<PersonVO>(this.personService.create(personVO), HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/v2")
+	@PostMapping(value = "/v2", produces = 
+		{MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, 
+		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<PersonVOV2> saveV2(@RequestBody PersonVOV2 personVOV2) {
 		return new ResponseEntity<PersonVOV2>(this.personService.createV2(personVOV2), HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(value = "/{id}", produces = 
+		{MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, 
+		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<PersonVO> update(@PathVariable(value = "id") Long id,@RequestBody PersonVO personVO) {
 		return new ResponseEntity<PersonVO>(this.personService.update(id,personVO), HttpStatus.OK);
 	}

@@ -1,13 +1,16 @@
 package br.com.erudio.services.impl;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.vo.v1.PersonVO;
 import br.com.erudio.data.vo.v2.PersonVOV2;
 import br.com.erudio.exceptions.ResourceNotFoundException;
@@ -32,6 +35,8 @@ public class PersonServiceImpl implements PersonService {
 		
 		return this.personRepository.findById(id).map(person ->{
 			PersonVO personVO = ModelMapperUtil.parseObject(person, PersonVO.class);
+			personVO.setKey(id);
+			personVO.add(linkTo(methodOn(PersonController.class).getPerson(id)).withSelfRel());
 			return personVO;
 		}).orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada.."));
 	}
@@ -40,6 +45,8 @@ public class PersonServiceImpl implements PersonService {
 	public List<PersonVO> findAll() {
 		return this.personRepository.findAll().stream().map(person -> {
 			PersonVO personVO = ModelMapperUtil.parseObject(person, PersonVO.class);
+			personVO.setKey(person.getId());
+			personVO.add(linkTo(methodOn(PersonController.class).getPerson(person.getId())).withSelfRel());
 			return personVO;
 		}).collect(Collectors.toList());
 	}
@@ -52,9 +59,9 @@ public class PersonServiceImpl implements PersonService {
 		Person person = ModelMapperUtil.parseObject(personVO, Person.class);
 		
 		person = this.personRepository.save(person);
-		personVO.setId(person.getId());
+		personVO.setKey(person.getId());
 		logger.info("Pessoa criada com sucesso.");
-		
+		personVO.add(linkTo(methodOn(PersonController.class).getPerson(personVO.getKey())).withSelfRel());
 		return personVO;
 	}
 	
@@ -66,6 +73,7 @@ public class PersonServiceImpl implements PersonService {
 		entity = ModelMapperUtil.parseObject(personVO, Person.class);
 		entity = this.personRepository.saveAndFlush(entity);
 		logger.info("Pessoa atualizada com sucesso.");
+		personVO.add(linkTo(methodOn(PersonController.class).getPerson(personVO.getKey())).withSelfRel());
 		return personVO;
 	}
 	

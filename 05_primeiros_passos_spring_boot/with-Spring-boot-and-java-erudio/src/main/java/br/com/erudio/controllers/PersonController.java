@@ -17,9 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.erudio.data.vo.v1.PersonVO;
 import br.com.erudio.data.vo.v2.PersonVOV2;
 import br.com.erudio.services.PersonService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/persons")
+@Tag(name = "Pessoa", description = "Endpoints para gerenciar Pessoas")
 public class PersonController {
 	
 	
@@ -34,6 +39,15 @@ public class PersonController {
 	
 	
 	@GetMapping
+	@Operation(summary = "Lista todas as pessoas", description = "Lista todas as pessoas", 
+		tags = {"Pessoas"}, 
+		responses = {
+				@ApiResponse(description="Sucesso", responseCode="200", content=@Content),
+				@ApiResponse(description="bad request", responseCode="400", content=@Content),
+				@ApiResponse(description="não autorizado", responseCode="401", content=@Content)
+		}
+		
+		)
 	public ResponseEntity<List<PersonVO>> getPersons() {
 		return new ResponseEntity<List<PersonVO>>(this.personService.findAll(), HttpStatus.OK);
 	}
